@@ -44,7 +44,7 @@ def load_rows(path):
 
 def split_template(t):
     lines = t.strip().splitlines()
-    subject = "Quick idea from Knotic Labs"
+    subject = "Quick Idea from Knotic Labs"
     if lines and lines[0].lower().startswith("subject:"):
         subject = lines[0].split(":", 1)[1].strip()
         lines = lines[1:]
@@ -178,17 +178,32 @@ def main():
     SENDER_EMAIL = SENDER_EMAIL or input("Your email address: ").strip()
     password = os.environ.get("SMTP_PASSWORD") or getpass.getpass("App password (not shown): ")
     ctx = ssl.create_default_context()
-    with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=30) as s:
-        s.starttls(context=ctx); s.login(SENDER_EMAIL, password)
-        for i, (c, to, subj, body, sec) in enumerate(queue, 1):
-            target = a.test_to or to
+    def connect():
+        srv = smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=30)
+        srv.starttls(context=ctx); srv.login(SENDER_EMAIL, password)
+        return srv
+
+    s = connect()
+    for i, (c, to, subj, body, sec) in enumerate(queue, 1):
+        target = a.test_to or to
+        try:
+            msg = build(target, subj, body)
             try:
-                s.send_message(build(target, subj, body))
-                print(f"SENT  {i}/{len(queue)}  {c} -> {target}")
-                log(c, target, "test" if a.test_to else "sent", "", sec, subj, CC_EMAILS)
-            except Exception as e:
-                print(f"FAIL  {c} -> {target}: {e}"); log(c, target, "failed", str(e), sec, subj, CC_EMAILS)
-            if i < len(queue): time.sleep(DELAY_SECONDS)
+                s.send_message(msg)
+            except (smtplib.SMTPServerDisconnected, smtplib.SMTPSenderRefused, OSError):
+                print("  connection lost - reconnecting...")
+                try: s.close()
+                except Exception: pass
+                time.sleep(10)
+                s = connect()
+                s.send_message(msg)
+            print(f"SENT  {i}/{len(queue)}  {c} -> {target}")
+            log(c, target, "test" if a.test_to else "sent", "", sec, subj, CC_EMAILS)
+        except Exception as e:
+            print(f"FAIL  {c} -> {target}: {e}"); log(c, target, "failed", str(e), sec, subj, CC_EMAILS)
+        if i < len(queue): time.sleep(DELAY_SECONDS)
+    try: s.quit()
+    except Exception: pass
     print("Done. Tracker updated:", TRACKER_FILE)
 
 if __name__ == "__main__":
