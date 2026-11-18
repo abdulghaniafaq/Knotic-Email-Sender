@@ -1,0 +1,37 @@
+time,company,email,status,note
+2026-11-18T20:43:30,First Abu Dhabi Bank (FAB),prandmedia@bankfab.com,sent,
+2026-11-18T20:45:02,Emirates NBD,customercare@emiratesnbd.com,sent,
+2026-11-18T20:46:35,Abu Dhabi Commercial Bank (ADCB),contactus@adcb.com,sent,
+2026-11-18T20:48:07,Dubai Islamic Bank,Contactus@dib.ae,sent,
+2026-11-18T20:49:40,Mashreq,Escalationscorporatecsu@mashreq.com,sent,
+2026-11-18T20:51:19,Abu Dhabi Islamic Bank (ADIB),customerservice@adib.ae,sent,
+2026-11-18T20:52:51,RAKBANK,contactus@rakbank.ae,sent,
+2026-11-18T20:54:24,National Bank of Fujairah,NBF-investorrelations@nbf.ae,sent,
+2026-11-18T20:55:56,Mediclinic Middle East,info@mediclinic.ae,sent,
+2026-11-18T20:57:29,Aster DM Healthcare,chq@asterdmhealthcare.com,sent,
+2026-11-18T20:58:59,Thumbay Group,careers@thumbay.com,failed,Server not connected
+2026-11-18T21:00:29,Zulekha Hospital,info@zulekhahospitals.com,failed,please run connect() first
+2026-11-18T21:01:59,Saudi German Hospital (UAE),info@saudigerman.com,failed,please run connect() first
+2026-11-18T21:03:29,"Tabrizi Dentistry, Al Ain / Abu Dhabi - 3 branches + lab",info@tabrizidentistry.com,failed,please run connect() first
+2026-11-18T21:04:59,"Dental Studio Group, Dubai - 8 clinics",careers@thedentalstudio.ae,failed,please run connect() first
+2026-11-18T21:06:29,Appolonia Dentistry for Children (+ Synergy Dental) - 7 branches,info@appolonia.ae,failed,please run connect() first
+2026-11-18T21:07:59,"Shifa Al Jazeera Medical Group, Sharjah/Ajman/RAK/Dubai",hr@shifaaljazeerauae.com,failed,please run connect() first
+2026-11-18T21:09:29,"Medsol Diagnostics, Dubai + Sharjah - 4 labs",info@medsoldiagnostics.com,failed,please run connect() first
+2026-11-18T21:10:59,"Accuracy Plus Medical Laboratory, Abu Dhabi",info@apml.co,failed,please run connect() first
+2026-11-18T21:18:02,Thumbay Group,careers@thumbay.com,sent,
+2026-11-18T21:19:35,Zulekha Hospital,info@zulekhahospitals.com,sent,
+2026-11-18T21:21:07,Saudi German Hospital (UAE),info@saudigerman.com,sent,
+2026-11-18T21:22:40,"Tabrizi Dentistry, Al Ain / Abu Dhabi - 3 branches + lab",info@tabrizidentistry.com,sent,
+2026-11-18T21:24:12,"Dental Studio Group, Dubai - 8 clinics",careers@thedentalstudio.ae,sent,
+2026-11-18T21:25:44,Appolonia Dentistry for Children (+ Synergy Dental) - 7 branches,info@appolonia.ae,sent,
+2026-11-18T21:27:17,"Shifa Al Jazeera Medical Group, Sharjah/Ajman/RAK/Dubai",hr@shifaaljazeerauae.com,sent,
+2026-11-18T21:28:49,"Medsol Diagnostics, Dubai + Sharjah - 4 labs",info@medsoldiagnostics.com,sent,
+2026-11-18T21:30:22,"Accuracy Plus Medical Laboratory, Abu Dhabi",info@apml.co,sent,
+2026-11-18T21:31:55,"Life Diagnostics (Life Dx), Abu Dhabi + Dubai - 2 labs",care@lifedx.net,sent,
+2026-11-18T21:33:27,Taaleem,info@taaleem.ae,sent,
+2026-11-18T21:34:59,Aldar Education,customercare@aldar.com,sent,
+2026-11-18T21:36:32,Bloom Education,info@bloomeducation.ae,sent,
+2026-11-18T21:38:04,Innoventures Education,careers@innoventureseducation.com,sent,
+2026-11-18T21:39:36,American University of Sharjah,TranscriptsAndLetters@aus.edu,sent,
+2026-11-18T21:41:09,Heriot-Watt University Dubai,hrdubai@hw.ac.uk,sent,
+2026-11-18T21:42:41,Middlesex University Dubai,a.chandar@mdx.ac.ae,sent,
