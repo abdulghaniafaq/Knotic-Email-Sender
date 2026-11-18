@@ -16,7 +16,7 @@ from email.utils import make_msgid, formatdate
 from openpyxl import load_workbook
 
 # ---------- SETTINGS (edit these) ----------
-SHEET_FILE   = "UAE_Email_Outreach_v4.xlsx"
+SHEET_FILE   = "UAE_Email_Outreach_new_only.xlsx"
 SENDER_NAME  = "Abdul Ghani"
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "abdulghani@knotic.co")      # e.g. abdul@knotic.co
 SMTP_HOST    = os.environ.get("SMTP_HOST", "smtp.gmail.com")  # Outlook: smtp.office365.com, Zoho: smtp.zoho.in
