@@ -16,7 +16,10 @@ from email.utils import make_msgid, formatdate
 from openpyxl import load_workbook
 
 # ---------- SETTINGS (edit these) ----------
-SHEET_FILE   = "UAE_Email_Outreach_new_only.xlsx"
+SHEET_FILES  = [                       # every prospect sheet to read from
+    "UAE_Email_Outreach_new_only.xlsx",
+    "v2_UAE_Outreach(1).xlsx","UAE_Email_Outreach_final.xlsx"
+]
 SENDER_NAME  = "Abdul Ghani"
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "abdulghani@knotic.co")      # e.g. abdul@knotic.co
 SMTP_HOST    = os.environ.get("SMTP_HOST", "smtp.gmail.com")  # Outlook: smtp.office365.com, Zoho: smtp.zoho.in
@@ -44,16 +47,28 @@ def load_rows(path):
 
 def split_template(t):
     lines = t.strip().splitlines()
-    subject = "Quick Idea from Knotic Labs"
+    subject = "Quick dea from Knotic Labs"
     if lines and lines[0].lower().startswith("subject:"):
         subject = lines[0].split(":", 1)[1].strip()
         lines = lines[1:]
     return subject, "\n".join(lines).strip()
 
 def already_sent():
-    if not os.path.exists(LOG_FILE): return set()
+    if not os.path.exists(LOG_FILE): return sent_in_tracker()
     with open(LOG_FILE, newline="", encoding="utf-8") as f:
-        return {r["email"].lower() for r in csv.DictReader(f) if r["status"] == "sent"}
+        done = {r["email"].strip().lower() for r in csv.DictReader(f) if r["status"] == "sent"}
+    return done | sent_in_tracker()
+
+def sent_in_tracker():
+    # Also skip anyone already marked "sent" in the Excel sent tracker.
+    if not os.path.exists(TRACKER_FILE): return set()
+    ws = load_workbook(TRACKER_FILE, read_only=True).active
+    rows = list(ws.iter_rows(values_only=True))
+    if not rows: return set()
+    h = [str(x or "").strip().lower() for x in rows[0]]
+    if "sent to" not in h or "status" not in h: return set()
+    ti, si = h.index("sent to"), h.index("status")
+    return {str(r[ti]).strip().lower() for r in rows[1:] if r[ti] and str(r[si] or "").lower() == "sent"}
 
 TRACKER_HEAD = ["Date", "Time", "Company", "Sector", "Sent to", "CC", "Subject", "Status",
                 "Error", "Follow-up 1 due", "Follow-up 2 due", "Reply received?", "Reply date", "Notes"]
@@ -115,9 +130,10 @@ def build(to, subject, body):
 # Which sectors go out on which day, and the time to start sending (IST).
 # A sector matches if any keyword appears in the row's Sector column.
 SCHEDULE = {
-    "Tuesday":   {"start": "10:15", "sectors": ["bank", "exchange", "freight", "logistic"]},
-    "Wednesday": {"start": "10:30", "sectors": ["health", "dental", "lab", "insurance", "account"]},
-    "Thursday":  {"start": "10:15", "sectors": ["educat", "school", "nurser", "real estate", "property", "trading", "fintech"]},
+    "Tuesday":   {"start": "10:15", "sectors": ["bank", "exchange", "freight", "logistic", "3pl", "fulfil"]},
+    "Wednesday": {"start": "10:30", "sectors": ["health", "dental", "lab", "insurance", "account", "clinic", "physio"]},
+    "Thursday":  {"start": "10:15", "sectors": ["educat", "school", "nurser", "training", "tuition", "real estate", "property", "trading", "fintech",
+                                                "food", "produce", "seafood", "fit-out", "facility", "fm services"]},
 }
 LATEST_START = "13:00"   # don't start a run after this time (IST)
 IST = dt.timezone(dt.timedelta(hours=5, minutes=30))
@@ -152,7 +168,11 @@ def main():
         print(f"{today}: sending only sectors matching {sectors}")
 
     done, queue = already_sent(), []
-    for r in load_rows(SHEET_FILE):
+    rows = []
+    for f in SHEET_FILES:
+        if os.path.exists(f): rows += load_rows(f)
+        else: print(f"WARNING: {f} not found - skipped")
+    for r in rows:
         if sectors and not any(k in str(r["sector"]).lower() for k in sectors):
             continue
         if not r["emails"]:
@@ -162,6 +182,7 @@ def main():
         to = r["emails"][0]
         if to.lower() in done:
             print(f"SKIP  {r['company']}: already sent to {to}"); continue
+        done.add(to.lower())   # stops the same email being queued twice from two sheets
         if "[" in r["template"]:
             print(f"SKIP  {r['company']}: template still has a [placeholder]"); continue
         queue.append((r["company"], to, *split_template(r["template"]), r["sector"]))
